@@ -1,0 +1,55 @@
+﻿MODELOS - LINKS DE DOWNLOAD E DESTINO
+
+Arquivo de referencia para baixar modelos manualmente.
+
+=================================================================
+1) BACKEND faster_whisper / whisperx (recomendado)
+=================================================================
+
+Modelos oficiais (Hugging Face):
+- tiny: https://huggingface.co/openai/whisper-tiny
+- base: https://huggingface.co/openai/whisper-base
+- small: https://huggingface.co/openai/whisper-small
+- medium: https://huggingface.co/openai/whisper-medium
+- large-v3: https://huggingface.co/openai/whisper-large-v3
+- distil-large-v3: https://huggingface.co/distil-whisper/distil-large-v3
+
+Onde colocar:
+- Nao precisa copiar manualmente.
+- O download ocorre automaticamente na primeira execucao.
+- Cache padrao: %USERPROFILE%\.cache\huggingface\hub
+
+Opcional (cache customizado):
+- Defina HF_HOME para outro disco antes de executar.
+  Exemplo PowerShell:
+  $env:HF_HOME = "D:\hf_cache"
+
+=================================================================
+2) BACKEND whisper_cpp (manual)
+=================================================================
+
+Se quiser usar whisper_cpp, baixe os modelos GGML abaixo e coloque em:
+- transcriber\models\
+
+Links diretos dos arquivos GGML (Hugging Face):
+- ggml-tiny.bin: https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin
+- ggml-base.bin: https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin
+- ggml-small.bin: https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin
+- ggml-medium.bin: https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.bin
+- ggml-large-v3.bin: https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3.bin
+
+Nomes dos arquivos:
+- Devem permanecer exatamente com esses nomes.
+
+Observacao importante:
+- distil-large-v3 e focado em faster-whisper/whisperx.
+- whisper_cpp usa os arquivos ggml-*.bin acima.
+
+=================================================================
+3) CHECKLIST RAPIDO
+=================================================================
+
+[ ] Escolhi backend (faster_whisper / whisperx / whisper_cpp)
+[ ] Baixei o modelo correto para o backend
+[ ] Se whisper_cpp: copiei .bin para transcriber\models\
+[ ] Iniciei o projeto e selecionei o modelo na UI
