@@ -11,7 +11,7 @@ Você pode:
 
 Este pacote já inclui um áudio real de sessão para quem quiser validar o fluxo completo sem preparar arquivos próprios:
 
-- Arquivo: `data/Oneshot-ODiaboDoPoco-Terca.ogg`
+- Arquivo: [`index.html#audio-exemplo`](index.html#audio-exemplo)
 - Contexto: one-shot no cenário de **The Witcher**
 - Mesa: **3 jogadores**
 - Sistema: **DND 5e 2024**
