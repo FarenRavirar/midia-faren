@@ -28,6 +28,16 @@ data/transcribe_cache/convert/*
 data/transcribe_cache/normalize/*
 !data/transcribe_cache/normalize/.gitkeep
 
+# Legacy transcriber local outputs/assets
+transcriber/convertidos/*
+!transcriber/convertidos/.gitkeep
+transcriber/transcricoes/*
+!transcriber/transcricoes/.gitkeep
+transcriber/models/*.bin
+!transcriber/models/.gitkeep
+transcriber/whisper-cublas-11.8.0-bin-x64/
+transcriber/whisper-cublas-12.4.0-bin-x64/
+
 # Optional temp
 *.tmp
 *.log
