@@ -136,6 +136,7 @@
         <a href="#sec1">1) Pacote</a>
         <a href="#sec2">2) Requisitos</a>
         <a href="#sec3">3) Instalação</a>
+        <a href="#sec3b">3.1) GitHub</a>
         <a href="#sec4">4) executar.bat</a>
         <a href="#sec5">5) FFmpeg</a>
         <a href="#sec6">6) GPU/CPU</a>
@@ -198,6 +199,39 @@
         <li>Aguarde os passos de instalação/validação.</li>
         <li>Acesse <code>http://127.0.0.1:5000/</code>.</li>
       </ol>
+    </div>
+
+    <h2 id="sec3b">3.1) Fluxo GitHub (clonar, commitar e publicar)</h2>
+    <div class="card">
+      <p>Repositório oficial: <a href="https://github.com/FarenRavirar/midia-faren/" target="_blank" rel="noopener">https://github.com/FarenRavirar/midia-faren/</a></p>
+
+      <h3>Clonar o repositório</h3>
+      <pre>git clone https://github.com/FarenRavirar/midia-faren.git
+cd midia-faren</pre>
+
+      <p>Para trabalhar só no pacote de instalação:</p>
+      <pre>cd instalacao\\midia-faren</pre>
+
+      <h3>Commits e push (fluxo básico)</h3>
+      <pre>git status
+git add .
+git commit -m \"chore: atualizacao da documentacao e instalacao\"
+git push origin main</pre>
+
+      <h3>Baixar ZIP sem Git</h3>
+      <p>No GitHub: <code>Code</code> -> <code>Download ZIP</code>.</p>
+
+      <h3>Publicar ZIP em Releases (recomendado)</h3>
+      <ol>
+        <li>Criar tag e enviar:</li>
+      </ol>
+      <pre>git tag -a v1.0.0 -m \"release v1.0.0\"
+git push origin v1.0.0</pre>
+      <ol start="2">
+        <li>No GitHub: <code>Releases</code> -> <code>Draft a new release</code>, selecione a tag e anexe o ZIP do pacote.</li>
+        <li>Gerar ZIP localmente (PowerShell):</li>
+      </ol>
+      <pre>Compress-Archive -Path \".\\instalacao\\midia-faren\\*\" -DestinationPath \".\\instalacao\\midia-faren-v1.0.0.zip\" -Force</pre>
     </div>
 
     <h2 id="sec4">4) O que o executar.bat faz</h2>

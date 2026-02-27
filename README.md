@@ -65,6 +65,61 @@ Se o navegador não abrir automático, acesse manualmente a URL acima.
 
 ---
 
+## 3.1) Fluxo GitHub (clonar, commitar e publicar)
+
+Repositório oficial:
+- https://github.com/FarenRavirar/midia-faren/
+
+### Clonar o repositório
+
+```bat
+git clone https://github.com/FarenRavirar/midia-faren.git
+cd midia-faren
+```
+
+Se você quiser trabalhar só no pacote de instalação:
+
+```bat
+cd instalacao\midia-faren
+```
+
+### Commits e push (fluxo básico)
+
+```bat
+git status
+git add .
+git commit -m "chore: atualizacao da documentacao e instalacao"
+git push origin main
+```
+
+### Baixar ZIP sem Git
+
+No GitHub, clique em:
+- `Code` -> `Download ZIP`
+
+### Publicar ZIP em Releases (recomendado)
+
+1. Criar tag e enviar:
+
+```bat
+git tag -a v1.0.0 -m "release v1.0.0"
+git push origin v1.0.0
+```
+
+2. No GitHub:
+   - `Releases` -> `Draft a new release`
+   - selecione a tag `v1.0.0`
+   - escreva título e notas
+   - anexe o ZIP do pacote (`instalacao/midia-faren`).
+
+3. Para gerar ZIP localmente (PowerShell):
+
+```powershell
+Compress-Archive -Path ".\instalacao\midia-faren\*" -DestinationPath ".\instalacao\midia-faren-v1.0.0.zip" -Force
+```
+
+---
+
 ## 4) O que o `executar.bat` faz
 
 - Cria/reutiliza o venv local: `.venv_cuda`
