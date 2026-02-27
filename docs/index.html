@@ -136,6 +136,17 @@
       font-size: 14px;
       color: #334155;
     }
+    .showcase-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .showcase-img {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -145,6 +156,13 @@
       <p>
         Esta página contém as <strong>mesmas informações técnicas do README.md</strong>, com visual organizado.
       </p>
+      <div class="card">
+        <p><strong>Ilustrações do projeto</strong></p>
+        <div class="showcase-grid">
+          <img class="showcase-img" src="data/banner.png" alt="Banner do fluxo de resumo de sessão" />
+          <img class="showcase-img" src="data/interface.jpg" alt="Interface principal do Mídia Faren" />
+        </div>
+      </div>
       <div class="card" id="audio-exemplo">
         <p><strong>Áudio de exemplo incluído para teste imediato</strong></p>
         <ul>

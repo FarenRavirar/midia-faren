@@ -7,6 +7,12 @@ Você pode:
 - descompactar,
 - executar `executar.bat`.
 
+## Ilustrações do projeto
+
+![Banner do fluxo de resumo de sessão](docs/data/banner.png)
+
+![Interface principal do Mídia Faren](docs/data/interface.jpg)
+
 ## Áudio de exemplo incluído (para teste imediato)
 
 Este pacote já inclui um áudio real de sessão para quem quiser validar o fluxo completo sem preparar arquivos próprios:
