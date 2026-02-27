@@ -334,29 +334,40 @@ git push origin v1.0.0</pre>
       </ol>
     </div>
 
-    <h2 id="sec10">10) Fluxo recomendado: Craig -> Mixagem -> NotebookLM</h2>
+    <h2 id="sec10">10) Fluxo recomendado: Craig -> Transcrição estruturada -> NotebookLM</h2>
     <div class="card">
+      <h3>Regra principal</h3>
+      <p>
+        Para resumo de sessão no NotebookLM, a fonte principal deve ser a <strong>transcrição em texto (TXT/SRT)</strong>,
+        com timestamps corretos e separação por falantes/personagens quando aplicável.
+      </p>
+      <p>
+        O M4A mixado pode ser usado como fonte complementar, mas não substitui a transcrição estruturada.
+      </p>
+
+      <h3>Pipeline recomendado no projeto</h3>
       <ol>
-        <li>Aba Conversor -> perfil <strong>Mixagem</strong>.</li>
-        <li>Enviar ZIP/FLAC do Craig.</li>
-        <li>Gerar saída em M4A.</li>
+        <li>Gerar transcrição completa na aba <strong>Transcrição</strong>.</li>
+        <li>Confirmar saída em <code>.txt</code> e <code>.srt</code> com marcação temporal e falantes.</li>
+        <li>Revisar trecho final para evitar cauda repetitiva/loop.</li>
+        <li>(Opcional) gerar M4A em Conversor -> Mixagem.</li>
         <li>Acessar <a href="https://notebooklm.google.com/" target="_blank" rel="noopener">NotebookLM</a>.</li>
-        <li>Criar notebook e enviar M4A.</li>
-        <li>Gerar resumo de áudio.</li>
+        <li>Criar notebook e enviar primeiro TXT/SRT.</li>
+        <li>Usar o prompt da seção 10.2 para gerar o resumo.</li>
       </ol>
       <h3>10.1 Passo a passo no NotebookLM</h3>
       <ol>
         <li>Acesse NotebookLM.</li>
         <li>Crie novo notebook.</li>
-        <li>Envie o M4A.</li>
-        <li>Aguarde processamento.</li>
-        <li>Abra resumo de áudio.</li>
-        <li>Selecione análise detalhada.</li>
+        <li>Adicione a transcrição (<code>.txt</code> ou <code>.srt</code>) como fonte principal.</li>
+        <li>Aguarde indexação da fonte.</li>
+        <li>(Opcional) adicione o M4A como fonte complementar.</li>
+        <li>Cole o prompt da seção 10.2 no chat.</li>
         <li>Idioma: Português (Brasil).</li>
       </ol>
 
       <h3>10.2 Prompt pronto (modelo genérico)</h3>
-      <pre>Gere um resumo da sessão de RPG baseada no áudio "[nome do áudio]" no cenário "[nome do cenário]".
+      <pre>Gere um resumo da sessão de RPG baseada na transcrição "[nome da transcrição]" no cenário "[nome do cenário]".
 
 Quero um texto em formato de conto narrado em primeira pessoa do plural ("nós"), como se um dos jogadores estivesse contando para amigos o que aconteceu.
 
@@ -384,7 +395,7 @@ Estrutura esperada:
    - gancho para continuação.
 
 Diretriz de fidelidade:
-- Use os nomes e fatos das fontes enviadas (áudio + notas de contexto), sem inventar fatos fora do material.
+- Use os nomes e fatos das fontes enviadas (transcrição com timestamps/falantes + notas de contexto), sem inventar fatos fora do material.
 - Se algo estiver ambíguo, indique como possibilidade em vez de afirmar com certeza.
 
 Final obrigatório (adapte ao contexto):
@@ -496,7 +507,8 @@ Observacoes de pronuncia ou escrita:
         <li>Glossário salva e aplica corretamente.</li>
         <li>Cancelamento de job interrompe de fato.</li>
         <li>Sem loop patológico na cauda.</li>
-        <li>Mixagem final em M4A pronta para NotebookLM.</li>
+        <li>TXT/SRT final com timestamps e falantes pronto para NotebookLM.</li>
+        <li>M4A de mixagem opcional disponível como fonte complementar.</li>
       </ul>
     </div>
 

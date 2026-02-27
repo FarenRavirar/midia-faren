@@ -256,15 +256,26 @@ Se quiser usar `whisper_cpp`, siga exatamente:
 
 ---
 
-## 10) Fluxo recomendado: Craig -> Mixagem -> NotebookLM
+## 10) Fluxo recomendado: Craig -> Transcrição estruturada -> NotebookLM
 
-1. Abra aba **Conversor**.
-2. Selecione perfil **Mixagem**.
-3. Envie ZIP/FLAC do Craig.
-4. Gere arquivo final em M4A.
+### Regra principal
+
+Para resumo de sessão no NotebookLM, a fonte principal deve ser a **transcrição em texto** (TXT/SRT) com:
+- timestamps corretos;
+- separação por falantes/personagens (quando aplicável);
+- ordem cronológica preservada.
+
+O arquivo de áudio mixado (M4A) pode ser usado como fonte complementar, mas **não substitui** a transcrição estruturada para esse objetivo.
+
+### Pipeline recomendado no projeto
+
+1. Gere a transcrição completa no módulo **Transcrição**.
+2. Confirme saída em `.txt` e `.srt` (com marcação temporal e falantes).
+3. Revise trecho final para evitar cauda repetitiva/loop.
+4. (Opcional) Gere M4A no módulo **Conversor > Mixagem**.
 5. Acesse NotebookLM: https://notebooklm.google.com/
-6. Crie notebook e envie o M4A.
-7. Gere resumo de áudio.
+6. Crie notebook e envie primeiro o TXT/SRT.
+7. Use o prompt de conto para gerar o resumo da sessão.
 
 Guia visual e prompt:
 - `instalacao_de_resumo_de_sessao.html`
@@ -273,16 +284,16 @@ Guia visual e prompt:
 
 1. Acesse https://notebooklm.google.com/
 2. Crie um novo notebook.
-3. Envie o áudio final em M4A.
-4. Aguarde o processamento completo.
-5. Abra a opção de resumo de áudio.
-6. Selecione análise detalhada.
+3. Adicione a transcrição (`.txt` ou `.srt`) como fonte principal.
+4. Aguarde indexação da fonte.
+5. (Opcional) adicione o M4A como fonte complementar.
+6. Cole o prompt (seção 10.2) no chat do NotebookLM.
 7. Idioma: Português (Brasil).
 
 ### 10.2) Prompt pronto (modelo genérico)
 
 ```text
-Gere um resumo da sessão de RPG baseada no áudio "[nome do áudio]" no cenário "[nome do cenário]".
+Gere um resumo da sessão de RPG baseada na transcrição "[nome da transcrição]" no cenário "[nome do cenário]".
 
 Quero um texto em formato de conto narrado em primeira pessoa do plural ("nós"), como se um dos jogadores estivesse contando para amigos o que aconteceu.
 
@@ -310,7 +321,7 @@ Estrutura esperada:
    - gancho para continuação.
 
 Diretriz de fidelidade:
-- Use os nomes e fatos das fontes enviadas (áudio + notas de contexto), sem inventar fatos fora do material.
+- Use os nomes e fatos das fontes enviadas (transcrição com timestamps/falantes + notas de contexto), sem inventar fatos fora do material.
 - Se algo estiver ambíguo, indique como possibilidade em vez de afirmar com certeza.
 
 Final obrigatório (adapte ao contexto):
