@@ -16,6 +16,8 @@ Você pode:
 - `mfaren/`: backend principal (download, conversão, transcrição, filas, jobs).
 - `static/` e `templates/`: frontend.
 - `instalacao_de_resumo_de_sessao.html`: guia visual com fluxo de resumo no NotebookLM.
+- `MODELOS_DOWNLOAD.txt`: links dos modelos + onde colocar cada arquivo.
+- `SMOKE_TEST_10_MIN.md`: checklist rápido para validar instalação em ~10 minutos.
 - `requirements.manual.txt`: referência de dependências para instalação manual.
 - `tests/`: testes automatizados (opcional para quem só vai usar).
 
@@ -162,6 +164,21 @@ Links oficiais dos modelos:
 - https://huggingface.co/openai/whisper-large-v3
 - https://huggingface.co/distil-whisper/distil-large-v3
 
+Arquivo dedicado de modelos (links + destino + checklist):
+- `MODELOS_DOWNLOAD.txt`
+
+### Onde cada modelo fica
+
+- `faster_whisper` / `whisperx`:
+  - não precisa copiar manualmente;
+  - baixa automaticamente na primeira execução;
+  - cache padrão em `%USERPROFILE%\.cache\huggingface\hub`.
+
+- `whisper_cpp`:
+  - baixar arquivos `ggml-*.bin` manualmente;
+  - copiar para `transcriber\models\`;
+  - nomes dos arquivos devem permanecer exatamente iguais.
+
 ---
 
 ## 9) Importante sobre `whisper_cpp` neste pacote GitHub
@@ -175,6 +192,12 @@ Impacto:
 
 Se não quiser setup adicional, use:
 - backend `faster_whisper` ou `whisperx`.
+
+Se quiser usar `whisper_cpp`, siga exatamente:
+1. Abra `MODELOS_DOWNLOAD.txt`.
+2. Baixe os modelos `ggml-*.bin`.
+3. Copie os arquivos para `transcriber\models\`.
+4. Na UI, selecione backend `whisper_cpp` e o modelo correspondente.
 
 ---
 
@@ -190,6 +213,96 @@ Se não quiser setup adicional, use:
 
 Guia visual e prompt:
 - `instalacao_de_resumo_de_sessao.html`
+
+### 10.1) Passo a passo no NotebookLM
+
+1. Acesse https://notebooklm.google.com/
+2. Crie um novo notebook.
+3. Envie o áudio final em M4A.
+4. Aguarde o processamento completo.
+5. Abra a opção de resumo de áudio.
+6. Selecione análise detalhada.
+7. Idioma: Português (Brasil).
+
+### 10.2) Prompt pronto (modelo genérico)
+
+```text
+Gere um resumo da sessão de RPG baseada no áudio "[nome do áudio]" no cenário "[nome do cenário]".
+
+Quero um texto em formato de conto narrado em primeira pessoa do plural ("nós"), como se um dos jogadores estivesse contando para amigos o que aconteceu.
+
+Regras do resultado:
+1) Não faça análise técnica da mesa.
+2) Não foque em elogiar ou exaltar pessoas específicas.
+3) Conte os acontecimentos da sessão com narrativa fluida e empolgante.
+
+Estrutura esperada:
+1) Abertura da sessão:
+   - como nós chegamos;
+   - contexto inicial do local;
+   - quem eram os personagens presentes.
+
+2) Desenvolvimento:
+   - conflitos e tensões;
+   - estratégias que nós tentamos;
+   - decisões e indecisões;
+   - reviravoltas, surpresas e consequências;
+   - acontecimentos importantes em ordem clara.
+
+3) Fechamento:
+   - estado final do grupo;
+   - perguntas em aberto;
+   - gancho para continuação.
+
+Diretriz de fidelidade:
+- Use os nomes e fatos das fontes enviadas (áudio + notas de contexto), sem inventar fatos fora do material.
+- Se algo estiver ambíguo, indique como possibilidade em vez de afirmar com certeza.
+
+Final obrigatório (adapte ao contexto):
+"Vamos ver aonde essa trama vai nos levar na próxima sessão."
+```
+
+### 10.3) Bloco de notas de contexto (para colar no NotebookLM)
+
+```text
+[NOTAS DE CONTEXTO DA SESSAO]
+
+Nome do audio: [nome do audio]
+Nome do cenario: [nome do cenario]
+Sistema: [sistema de RPG]
+Resumo do contexto inicial: [contexto inicial da sessao]
+
+Personagens de jogadores:
+- Jogador: [nome do jogador 1]
+  Personagem: [nome do personagem 1]
+  Conceito: [raca/classe/profissao]
+  Vinculo ou origem: [faccao/cidade/clan/grupo]
+  Motivacao atual: [objetivo na sessao]
+
+- Jogador: [nome do jogador 2]
+  Personagem: [nome do personagem 2]
+  Conceito: [raca/classe/profissao]
+  Vinculo ou origem: [faccao/cidade/clan/grupo]
+  Motivacao atual: [objetivo na sessao]
+
+NPCs importantes:
+- NPC: [nome do NPC 1]
+  Papel na historia: [funcao]
+  Relacao com o grupo: [como influencia o grupo]
+
+- NPC: [nome do NPC 2]
+  Papel na historia: [funcao]
+  Relacao com o grupo: [como influencia o grupo]
+
+Termos e nomes que nao devem ser corrigidos:
+- [termo 1]
+- [termo 2]
+- [local 1]
+
+Observacoes de pronuncia ou escrita:
+- [nome dificil 1] -> [forma correta]
+- [nome dificil 2] -> [forma correta]
+```
 
 ---
 
@@ -239,7 +352,21 @@ Esta pasta já está preparada para publicação:
 
 ---
 
-## 14) Créditos
+## 14) Smoke test de 10 minutos
+
+Use o checklist completo em:
+- `SMOKE_TEST_10_MIN.md`
+
+Resumo rápido (aprovação):
+1. App sobe e UI abre.
+2. Conversão curta termina com sucesso.
+3. Transcrição curta gera `.txt` + `.srt`.
+4. Cancelamento funciona.
+5. Sem erro crítico persistente no fim de `logs/app.log`.
+
+---
+
+## 15) Créditos
 
 Desenvolvido por **Paulo "Faren" Lima** - Artifício RPG
 - https://artificiorpg.com/

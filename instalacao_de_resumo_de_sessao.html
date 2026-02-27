@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Instalação de Resumo de Sessão</title>
+  <title>Mídia Faren - Guia Completo (HTML)</title>
   <style>
     :root {
       --bg: #f6f3ed;
@@ -13,9 +13,8 @@
       --line: #e5e7eb;
       --accent: #0f766e;
       --accent-soft: #ecfeff;
-      --warm: #9a3412;
-      --warm-soft: #fff7ed;
-      --soft: #f8fafc;
+      --code-bg: #111827;
+      --code-text: #f9fafb;
     }
     * { box-sizing: border-box; }
     body {
@@ -25,11 +24,7 @@
       color: var(--text);
       line-height: 1.55;
     }
-    .wrap {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 28px 18px 56px;
-    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 18px 56px; }
     .hero {
       background: var(--card);
       border: 1px solid var(--line);
@@ -44,23 +39,14 @@
       border-bottom: 1px solid var(--line);
       padding-bottom: 8px;
     }
-    h3 { margin: 20px 0 8px; font-size: 18px; }
+    h3 { margin: 18px 0 8px; font-size: 18px; }
     p, li { color: var(--muted); }
-    ul, ol { margin: 8px 0 10px; }
     .card {
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 12px;
       padding: 14px 16px;
       margin-top: 12px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-    @media (min-width: 960px) {
-      .grid-2 { grid-template-columns: 1fr 1fr; }
     }
     .tag {
       display: inline-block;
@@ -90,15 +76,6 @@
       text-decoration: none;
     }
     .nav a:hover { background: #eef2ff; }
-    .warn {
-      background: var(--warm-soft);
-      border: 1px solid #fed7aa;
-      color: var(--warm);
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 14px;
-      margin: 10px 0;
-    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -112,8 +89,6 @@
       text-align: left;
     }
     th { background: #f9fafb; color: #111827; }
-    a { color: #0c4a6e; text-decoration: none; }
-    a:hover { text-decoration: underline; }
     code {
       background: #f3f4f6;
       border: 1px solid #e5e7eb;
@@ -121,27 +96,22 @@
       border-radius: 4px;
       color: #111827;
     }
-    .step {
-      background: var(--soft);
-      border: 1px solid #dbeafe;
+    pre {
+      margin: 10px 0;
+      background: var(--code-bg);
+      color: var(--code-text);
       border-radius: 10px;
-      padding: 10px 12px;
-      margin: 8px 0;
-    }
-    .step strong { color: #111827; }
-    .prompt {
-      background: #111827;
-      color: #f9fafb;
-      border-radius: 12px;
-      padding: 14px;
+      padding: 12px;
+      overflow-x: auto;
       border: 1px solid #374151;
-      white-space: pre-wrap;
-      font-family: Consolas, "Courier New", monospace;
       font-size: 13px;
       line-height: 1.5;
+      white-space: pre-wrap;
     }
+    a { color: #0c4a6e; text-decoration: none; }
+    a:hover { text-decoration: underline; }
     .credit {
-      margin-top: 30px;
+      margin-top: 28px;
       text-align: center;
       font-size: 14px;
       color: #334155;
@@ -151,150 +121,134 @@
 <body>
   <main class="wrap">
     <section class="hero">
-      <h1>Instalação de Resumo de Sessão</h1>
+      <h1>Mídia Faren - Guia Completo (HTML)</h1>
       <p>
-        Guia completo para montar no PC um fluxo local de <strong>mixagem de áudio do Craig</strong> + <strong>transcrição</strong>,
-        com saída pronta para revisão e para uso no Google NotebookLM.
+        Esta página contém as <strong>mesmas informações técnicas do README.md</strong>, com visual organizado.
       </p>
       <div>
         <span class="tag">Windows</span>
-        <span class="tag">Flask local</span>
-        <span class="tag">FFmpeg</span>
-        <span class="tag">Whisper/Faster-Whisper/WhisperX</span>
+        <span class="tag">Sem Git obrigatório</span>
+        <span class="tag">Flask</span>
+        <span class="tag">Transcrição + Mixagem</span>
         <span class="tag">GPU CUDA opcional</span>
       </div>
       <nav class="nav" aria-label="Navegação rápida">
-        <a href="#ingredientes">Ingredientes</a>
-        <a href="#conceitos">Conceitos</a>
-        <a href="#modelos">Modelos</a>
-        <a href="#implantacao">Implantação</a>
-        <a href="#notebooklm">NotebookLM</a>
-        <a href="#prompt">Prompt pronto</a>
-        <a href="#checklist">Checklist</a>
+        <a href="#sec1">1) Pacote</a>
+        <a href="#sec2">2) Requisitos</a>
+        <a href="#sec3">3) Instalação</a>
+        <a href="#sec4">4) executar.bat</a>
+        <a href="#sec5">5) FFmpeg</a>
+        <a href="#sec6">6) GPU/CPU</a>
+        <a href="#sec7">7) Backends</a>
+        <a href="#sec8">8) Modelos</a>
+        <a href="#sec9">9) whisper_cpp</a>
+        <a href="#sec10">10) NotebookLM</a>
+        <a href="#sec11">11) Verificações</a>
+        <a href="#sec12">12) Troubleshooting</a>
+        <a href="#sec13">13) Publicação</a>
+        <a href="#sec14">14) Smoke test</a>
       </nav>
     </section>
 
-    <h2 id="ingredientes">1) Ingredientes (pré-requisitos)</h2>
+    <h2 id="sec1">1) O que este pacote contém</h2>
     <div class="card">
-      <h3>Hardware recomendado</h3>
       <ul>
-        <li><strong>CPU:</strong> 6 núcleos ou mais.</li>
-        <li><strong>RAM:</strong> 16 GB mínimo (32 GB ideal para projetos longos).</li>
-        <li><strong>Disco:</strong> SSD NVMe (evita gargalo em normalização/chunks/cache).</li>
-        <li><strong>GPU (opcional, recomendada):</strong> NVIDIA com 8 GB VRAM ou mais para WhisperX/Faster-Whisper em CUDA.</li>
+        <li><code>app.py</code>: servidor Flask da aplicação.</li>
+        <li><code>executar.bat</code>: instalador/validador automático + inicialização.</li>
+        <li><code>mfaren/</code>: backend principal (download, conversão, transcrição, filas, jobs).</li>
+        <li><code>static/</code> e <code>templates/</code>: frontend.</li>
+        <li><code>instalacao_de_resumo_de_sessao.html</code>: este guia visual.</li>
+        <li><code>MODELOS_DOWNLOAD.txt</code>: links dos modelos + onde colocar cada arquivo.</li>
+        <li><code>SMOKE_TEST_10_MIN.md</code>: checklist rápido para validar instalação em ~10 minutos.</li>
+        <li><code>requirements.manual.txt</code>: referência de dependências para instalação manual.</li>
+        <li><code>tests/</code>: testes automatizados (opcional).</li>
+      </ul>
+      <p>Estrutura runtime incluída vazia: <code>data/uploads/</code>, <code>data/transcribe_cache/</code>, <code>downloads/</code>, <code>logs/</code>.</p>
+    </div>
+
+    <h2 id="sec2">2) Requisitos obrigatórios</h2>
+    <div class="card">
+      <ol>
+        <li>Python 3.11+ (3.13 também funciona) - <a href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener">python.org/downloads/windows</a></li>
+        <li>FFmpeg (full shared) - <a href="https://www.gyan.dev/ffmpeg/builds/" target="_blank" rel="noopener">gyan.dev/ffmpeg/builds</a></li>
+        <li>Microsoft VC++ Redistributable (x64) - <a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist" target="_blank" rel="noopener">learn.microsoft.com VC++ redist</a></li>
+      </ol>
+      <p>Recomendado para desempenho: Driver NVIDIA (<a href="https://www.nvidia.com/Download/index.aspx" target="_blank" rel="noopener">link</a>) e CUDA Toolkit (<a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="noopener">link</a>).</p>
+      <ul>
+        <li>Internet necessária na primeira execução (download de pacotes/modelos).</li>
+        <li>Espaço livre recomendado: 15 GB+.</li>
       </ul>
     </div>
 
+    <h2 id="sec3">3) Instalação do zero (sem Git)</h2>
     <div class="card">
-      <h3>Ferramentas externas obrigatórias</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Ferramenta</th>
-            <th>Para que serve no fluxo</th>
-            <th>Download oficial</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Python 3.11+ (3.13 também funciona)</td>
-            <td>Base de execução do backend Flask e dos módulos de IA.</td>
-            <td><a href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener">python.org/downloads/windows</a></td>
-          </tr>
-          <tr>
-            <td>FFmpeg (full shared build)</td>
-            <td>Conversão, normalização, extração, mixagem e processamento de áudio/vídeo.</td>
-            <td><a href="https://www.gyan.dev/ffmpeg/builds/" target="_blank" rel="noopener">gyan.dev/ffmpeg/builds</a></td>
-          </tr>
-          <tr>
-            <td>yt-dlp</td>
-            <td>Download local/remoto quando usar módulo de download.</td>
-            <td><a href="https://pypi.org/project/yt-dlp/" target="_blank" rel="noopener">pypi.org/project/yt-dlp</a></td>
-          </tr>
-          <tr>
-            <td>7-Zip (opcional)</td>
-            <td>Extrair pacote ZIP do projeto e outros arquivos compactados.</td>
-            <td><a href="https://www.7-zip.org/" target="_blank" rel="noopener">7-zip.org</a></td>
-          </tr>
-          <tr>
-            <td>Microsoft VC++ Redistributable</td>
-            <td>Dependência de DLLs em runtime para libs nativas (torch/ffmpeg/ctranslate2).</td>
-            <td><a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist" target="_blank" rel="noopener">learn.microsoft.com VC++ redist</a></td>
-          </tr>
-        </tbody>
-      </table>
+      <ol>
+        <li>Baixe o ZIP do projeto.</li>
+        <li>Descompacte em uma pasta local (ex.: <code>C:\midia-faren</code>).</li>
+        <li>Execute <code>executar.bat</code>.</li>
+        <li>Aguarde os passos de instalação/validação.</li>
+        <li>Acesse <code>http://127.0.0.1:5000/</code>.</li>
+      </ol>
     </div>
 
+    <h2 id="sec4">4) O que o executar.bat faz</h2>
     <div class="card">
-      <h3>Ferramentas de IA (pacotes Python)</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Pacote</th>
-            <th>Papel</th>
-            <th>Referência oficial</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Whisper (OpenAI)</td>
-            <td>Modelo base de transcrição de fala.</td>
-            <td><a href="https://pypi.org/project/openai-whisper/" target="_blank" rel="noopener">pypi.org/project/openai-whisper</a></td>
-          </tr>
-          <tr>
-            <td>faster-whisper</td>
-            <td>Implementação mais rápida do Whisper via CTranslate2.</td>
-            <td><a href="https://pypi.org/project/faster-whisper/" target="_blank" rel="noopener">pypi.org/project/faster-whisper</a></td>
-          </tr>
-          <tr>
-            <td>CTranslate2</td>
-            <td>Engine otimizada de inferência (CPU/GPU).</td>
-            <td><a href="https://opennmt.net/CTranslate2/" target="_blank" rel="noopener">opennmt.net/CTranslate2</a></td>
-          </tr>
-          <tr>
-            <td>WhisperX</td>
-            <td>Transcrição + alinhamento temporal avançado + diarização opcional.</td>
-            <td><a href="https://pypi.org/project/whisperx/" target="_blank" rel="noopener">pypi.org/project/whisperx</a></td>
-          </tr>
-          <tr>
-            <td>PyTorch + CUDA (opcional)</td>
-            <td>Aceleração em GPU NVIDIA.</td>
-            <td><a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">pytorch.org/get-started/locally</a></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="warn">
-        Para GPU NVIDIA: instalar driver atualizado primeiro e depois stack PyTorch/CUDA compatível.
-        Links: <a href="https://www.nvidia.com/Download/index.aspx" target="_blank" rel="noopener">Driver NVIDIA</a> e
-        <a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="noopener">CUDA Toolkit</a>.
-      </div>
+      <ul>
+        <li>Cria/reutiliza venv local <code>.venv_cuda</code>.</li>
+        <li>Instala base: <code>flask</code>, <code>requests</code>, <code>yt-dlp</code>.</li>
+        <li>Instala stack IA fixada:
+          <ul>
+            <li><code>torch==2.8.0+cu128</code></li>
+            <li><code>torchaudio==2.8.0+cu128</code></li>
+            <li><code>faster-whisper==1.2.1</code></li>
+            <li><code>whisperx==3.8.0</code></li>
+            <li><code>ctranslate2==4.7.1</code></li>
+          </ul>
+        </li>
+        <li>Remove <code>torchcodec</code> por instabilidade neste stack no Windows.</li>
+        <li>Valida imports e sobe o Flask.</li>
+      </ul>
+      <h3>Flags úteis</h3>
+      <ul>
+        <li><code>--check</code>: só valida ambiente.</li>
+        <li><code>--setup-env</code>: força reinstalação.</li>
+        <li><code>--recreate-venv</code>: recria venv.</li>
+        <li><code>--ffmpeg-path-on</code>: força PATH FFmpeg da sessão.</li>
+        <li><code>--ffmpeg-path-auto</code>: injeta só se FFmpeg não estiver no PATH.</li>
+        <li><code>--ffmpeg-path-off</code>: não injeta PATH (padrão).</li>
+      </ul>
+      <pre>executar.bat --setup-env --recreate-venv --ffmpeg-path-auto</pre>
     </div>
 
-    <h2 id="conceitos">2) Conceitos essenciais</h2>
-    <div class="grid grid-2">
-      <section class="card">
-        <h3>O que é Whisper</h3>
-        <p>Modelo de reconhecimento de fala que transforma áudio em texto com timestamps.</p>
-
-        <h3>O que é WhisperX</h3>
-        <p>Camada sobre Whisper/Faster-Whisper para alinhamento temporal fino e diarização opcional.</p>
-
-        <h3>Normalização</h3>
-        <p>Ajusta volume e dinâmica para melhorar inteligibilidade. Pode aumentar custo de processamento.</p>
-      </section>
-      <section class="card">
-        <h3>VAD (detecção de voz)</h3>
-        <p>Separa fala de silêncio/ruído para focar processamento no que importa.</p>
-
-        <h3>Chunking + overlap</h3>
-        <p>Divide o áudio em blocos com sobreposição para reduzir risco de loop e permitir retomada por chunk.</p>
-
-        <h3>Glossário/contexto</h3>
-        <p>Lista de termos do universo da campanha (ex.: nomes próprios) para reduzir erros absurdos.</p>
-      </section>
+    <h2 id="sec5">5) FFmpeg: como garantir detecção</h2>
+    <div class="card">
+      <p>Ordem de busca do app:</p>
+      <ol>
+        <li><code>tools\ffmpeg\bin\ffmpeg.exe</code></li>
+        <li><code>C:\tools\ffmpeg\ffmpeg-7.1.1-full_build-shared\bin\ffmpeg.exe</code></li>
+        <li><code>ffmpeg</code> no PATH</li>
+      </ol>
+      <p>Teste:</p>
+      <pre>ffmpeg -version</pre>
     </div>
 
-    <h2 id="modelos">3) Modelos e diferenças práticas</h2>
+    <h2 id="sec6">6) GPU vs CPU (comportamento real)</h2>
+    <div class="card">
+      <ul>
+        <li>Roda com e sem CUDA.</li>
+        <li>Com CUDA: mais rápido.</li>
+        <li>Sem CUDA: funciona em CPU (mais lento).</li>
+      </ul>
+      <pre>.venv_cuda\Scripts\python -c "import torch; print(torch.cuda.is_available(), torch.version.cuda)"</pre>
+    </div>
+
+    <h2 id="sec7">7) Backends de transcrição</h2>
+    <div class="card">
+      <p>Disponíveis na UI: <code>whisper_cpp</code>, <code>faster_whisper</code>, <code>whisperx</code>.</p>
+      <p>Recursos: chunking + overlap, checkpoint por chunk, retomada/reprocessamento, guardrails anti-loop, glossário persistente.</p>
+    </div>
+
+    <h2 id="sec8">8) Modelos (qualidade x velocidade)</h2>
     <div class="card">
       <table>
         <thead>
@@ -302,64 +256,64 @@
             <th>Modelo</th>
             <th>Velocidade</th>
             <th>Qualidade</th>
-            <th>Quando usar</th>
-            <th>Link oficial do modelo</th>
+            <th>Link</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>tiny</td><td>Muito alta</td><td>Baixa</td><td>Rascunho rápido, hardware fraco.</td><td><a href="https://huggingface.co/openai/whisper-tiny" target="_blank" rel="noopener">openai/whisper-tiny</a></td></tr>
-          <tr><td>base</td><td>Alta</td><td>Baixa/média</td><td>Prévia com pouco custo.</td><td><a href="https://huggingface.co/openai/whisper-base" target="_blank" rel="noopener">openai/whisper-base</a></td></tr>
-          <tr><td>small</td><td>Média/alta</td><td>Média</td><td>Bom equilíbrio para testes.</td><td><a href="https://huggingface.co/openai/whisper-small" target="_blank" rel="noopener">openai/whisper-small</a></td></tr>
-          <tr><td>medium</td><td>Média</td><td>Boa</td><td>Produção com prazo.</td><td><a href="https://huggingface.co/openai/whisper-medium" target="_blank" rel="noopener">openai/whisper-medium</a></td></tr>
-          <tr><td>large-v3</td><td>Mais lento</td><td>Muito alta</td><td>Melhor qualidade para português e áudio difícil.</td><td><a href="https://huggingface.co/openai/whisper-large-v3" target="_blank" rel="noopener">openai/whisper-large-v3</a></td></tr>
-          <tr><td>distil-large-v3</td><td>Mais rápido que large-v3</td><td>Próxima do large-v3</td><td>Quando precisa reduzir tempo sem perder muito.</td><td><a href="https://huggingface.co/distil-whisper/distil-large-v3" target="_blank" rel="noopener">distil-whisper/distil-large-v3</a></td></tr>
+          <tr><td>tiny</td><td>Muito alta</td><td>Baixa</td><td><a href="https://huggingface.co/openai/whisper-tiny" target="_blank" rel="noopener">openai/whisper-tiny</a></td></tr>
+          <tr><td>base</td><td>Alta</td><td>Baixa/média</td><td><a href="https://huggingface.co/openai/whisper-base" target="_blank" rel="noopener">openai/whisper-base</a></td></tr>
+          <tr><td>small</td><td>Média/alta</td><td>Média</td><td><a href="https://huggingface.co/openai/whisper-small" target="_blank" rel="noopener">openai/whisper-small</a></td></tr>
+          <tr><td>medium</td><td>Média</td><td>Boa</td><td><a href="https://huggingface.co/openai/whisper-medium" target="_blank" rel="noopener">openai/whisper-medium</a></td></tr>
+          <tr><td>large-v3</td><td>Mais lento</td><td>Muito alta</td><td><a href="https://huggingface.co/openai/whisper-large-v3" target="_blank" rel="noopener">openai/whisper-large-v3</a></td></tr>
+          <tr><td>distil-large-v3</td><td>Mais rápido</td><td>Próxima do large-v3</td><td><a href="https://huggingface.co/distil-whisper/distil-large-v3" target="_blank" rel="noopener">distil-whisper/distil-large-v3</a></td></tr>
         </tbody>
       </table>
+      <p>Arquivo de referência: <code>MODELOS_DOWNLOAD.txt</code>.</p>
+      <h3>Onde cada modelo fica</h3>
+      <ul>
+        <li><code>faster_whisper</code>/<code>whisperx</code>: download automático; cache em <code>%USERPROFILE%\.cache\huggingface\hub</code>.</li>
+        <li><code>whisper_cpp</code>: baixar <code>ggml-*.bin</code> e copiar para <code>transcriber\models\</code>.</li>
+      </ul>
     </div>
 
-    <h2 id="implantacao">4) Modo de preparo (implantação em ordem)</h2>
+    <h2 id="sec9">9) Importante sobre whisper_cpp neste pacote</h2>
+    <div class="card">
+      <p>Para manter o repositório leve no GitHub, binários grandes e modelos <code>.bin</code> do <code>whisper_cpp</code> não são incluídos.</p>
+      <ul>
+        <li><code>faster_whisper</code> e <code>whisperx</code> continuam prontos.</li>
+        <li>Se quiser <code>whisper_cpp</code>, siga:</li>
+      </ul>
+      <ol>
+        <li>Abrir <code>MODELOS_DOWNLOAD.txt</code>.</li>
+        <li>Baixar modelos <code>ggml-*.bin</code>.</li>
+        <li>Copiar para <code>transcriber\models\</code>.</li>
+        <li>Selecionar backend/modelo na UI.</li>
+      </ol>
+    </div>
+
+    <h2 id="sec10">10) Fluxo recomendado: Craig -> Mixagem -> NotebookLM</h2>
     <div class="card">
       <ol>
-        <li>Instalar Python, FFmpeg (full shared), VC++ Redistributable e yt-dlp.</li>
-        <li>Confirmar no terminal: <code>python --version</code> e <code>ffmpeg -version</code>.</li>
-        <li>Obter o projeto <strong>midia-faren</strong> por pacote ZIP, pasta compartilhada ou cópia local (sem Git obrigatório).</li>
-        <li>Executar <code>executar.bat</code> para preparar o ambiente e subir o Flask.</li>
-        <li>Abrir no navegador e validar módulos: Download, Conversor e Transcrição.</li>
-        <li>Configurar backend (faster-whisper ou whisperx), modelo e glossário.</li>
-        <li>Rodar um teste curto (5-10 minutos) antes de processar sessão longa.</li>
-        <li>Executar sessão completa do Craig (ZIP/FLAC), monitorando progresso, ETA e logs.</li>
+        <li>Aba Conversor -> perfil <strong>Mixagem</strong>.</li>
+        <li>Enviar ZIP/FLAC do Craig.</li>
+        <li>Gerar saída em M4A.</li>
+        <li>Acessar <a href="https://notebooklm.google.com/" target="_blank" rel="noopener">NotebookLM</a>.</li>
+        <li>Criar notebook e enviar M4A.</li>
+        <li>Gerar resumo de áudio.</li>
       </ol>
-      <p><strong>Links rápidos de download (oficiais):</strong></p>
-      <ul>
-        <li>Python: <a href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener">python.org/downloads/windows</a></li>
-        <li>FFmpeg full shared: <a href="https://www.gyan.dev/ffmpeg/builds/" target="_blank" rel="noopener">gyan.dev/ffmpeg/builds</a></li>
-        <li>VC++ Redistributable: <a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist" target="_blank" rel="noopener">learn.microsoft.com VC++ redist</a></li>
-        <li>yt-dlp: <a href="https://pypi.org/project/yt-dlp/" target="_blank" rel="noopener">pypi.org/project/yt-dlp</a></li>
-        <li>7-Zip (opcional): <a href="https://www.7-zip.org/" target="_blank" rel="noopener">7-zip.org</a></li>
-        <li>Projeto midia-faren: pacote ZIP/pasta local fornecida pelo mantenedor.</li>
-      </ul>
-      <p>
-        Comando de referência do modo rápido (exemplo recomendado):<br />
-        <code>whisperx *.flac --model large-v3 --language pt --device cuda --compute_type float16 --batch_size 4 --output_format json srt --initial_prompt "glossário"</code>
-      </p>
-    </div>
+      <h3>10.1 Passo a passo no NotebookLM</h3>
+      <ol>
+        <li>Acesse NotebookLM.</li>
+        <li>Crie novo notebook.</li>
+        <li>Envie o M4A.</li>
+        <li>Aguarde processamento.</li>
+        <li>Abra resumo de áudio.</li>
+        <li>Selecione análise detalhada.</li>
+        <li>Idioma: Português (Brasil).</li>
+      </ol>
 
-    <h2 id="notebooklm">5) Passo a passo para resumo no Google NotebookLM</h2>
-    <div class="card">
-      <p>Link oficial: <a href="https://notebooklm.google.com/" target="_blank" rel="noopener">https://notebooklm.google.com/</a></p>
-
-      <div class="step"><strong>Passo 1:</strong> abrir o NotebookLM e clicar em <em>Criar novo notebook</em>.</div>
-      <div class="step"><strong>Passo 2:</strong> inserir o áudio final em <strong>M4A</strong> (gerado pelo módulo de mixagem).</div>
-      <div class="step"><strong>Passo 3:</strong> aguardar o processamento completo da fonte de áudio.</div>
-      <div class="step"><strong>Passo 4:</strong> abrir a opção <em>Resumo de áudio</em>.</div>
-      <div class="step"><strong>Passo 5:</strong> escolher o modo <em>Análise detalhada</em>.</div>
-      <div class="step"><strong>Passo 6:</strong> em idioma, selecionar <strong>Português (Brasil)</strong>.</div>
-    </div>
-
-    <h2 id="prompt">6) Prompt pronto (organizado para IA)</h2>
-    <div class="card">
-      <p>Use este texto no NotebookLM para gerar o resumo em formato de conto (modelo genérico):</p>
-      <div class="prompt">Gere um resumo da sessão de RPG baseada no áudio "[nome do áudio]" no cenário "[nome do cenário]".
+      <h3>10.2 Prompt pronto (modelo genérico)</h3>
+      <pre>Gere um resumo da sessão de RPG baseada no áudio "[nome do áudio]" no cenário "[nome do cenário]".
 
 Quero um texto em formato de conto narrado em primeira pessoa do plural ("nós"), como se um dos jogadores estivesse contando para amigos o que aconteceu.
 
@@ -391,10 +345,10 @@ Diretriz de fidelidade:
 - Se algo estiver ambíguo, indique como possibilidade em vez de afirmar com certeza.
 
 Final obrigatório (adapte ao contexto):
-"Vamos ver aonde essa trama vai nos levar na próxima sessão."</div>
+"Vamos ver aonde essa trama vai nos levar na próxima sessão."</pre>
 
-      <p style="margin-top:12px;">Sugestão: adicione também uma fonte em texto com contexto da sessão antes de pedir o resumo.</p>
-      <div class="prompt">[NOTAS DE CONTEXTO DA SESSAO]
+      <h3>10.3 Bloco de notas de contexto</h3>
+      <pre>[NOTAS DE CONTEXTO DA SESSAO]
 
 Nome do audio: [nome do audio]
 Nome do cenario: [nome do cenario]
@@ -430,18 +384,75 @@ Termos e nomes que nao devem ser corrigidos:
 
 Observacoes de pronuncia ou escrita:
 - [nome dificil 1] -> [forma correta]
-- [nome dificil 2] -> [forma correta]</div>
+- [nome dificil 2] -> [forma correta]</pre>
     </div>
 
-    <h2 id="checklist">7) Checklist final</h2>
+    <h2 id="sec11">11) Verificações pós-instalação</h2>
+    <div class="card">
+      <pre>.venv_cuda\Scripts\python -c "import flask,requests,yt_dlp; print('core_ok')"
+.venv_cuda\Scripts\python -c "import torch; print(torch.__version__, torch.cuda.is_available(), torch.version.cuda)"
+.venv_cuda\Scripts\python -c "import importlib.metadata as md; print(md.version('whisperx'), md.version('faster-whisper'), md.version('ctranslate2'))"</pre>
+    </div>
+
+    <h2 id="sec12">12) Troubleshooting rápido</h2>
+    <div class="card">
+      <h3>ffmpeg não encontrado</h3>
+      <ul>
+        <li>Reinstale FFmpeg full shared.</li>
+        <li>Valide <code>ffmpeg -version</code>.</li>
+        <li>Use <code>executar.bat --ffmpeg-path-auto</code>.</li>
+      </ul>
+
+      <h3>Erro de dependência Python</h3>
+      <pre>executar.bat --setup-env --recreate-venv</pre>
+
+      <h3>Transcrição lenta</h3>
+      <ul>
+        <li>Use modelo menor (<code>small</code>/<code>medium</code>).</li>
+        <li>Use backend <code>faster_whisper</code>.</li>
+        <li>Verifique se CUDA está ativo.</li>
+      </ul>
+
+      <h3>Loop/repetição no final</h3>
+      <ul>
+        <li>Ajuste chunk/overlap.</li>
+        <li>Revise glossário/contexto.</li>
+        <li>Use reprocessamento de chunk.</li>
+      </ul>
+    </div>
+
+    <h2 id="sec13">13) Publicação no GitHub</h2>
     <div class="card">
       <ul>
-        <li>Flask inicia sem erro e interface abre no navegador.</li>
-        <li>FFmpeg detectado e conversão funcionando.</li>
+        <li><code>.gitignore</code> já preparado para dados locais/caches.</li>
+        <li>Sem caminhos pessoais hardcoded.</li>
+        <li>Sem venv embutido.</li>
+        <li>Sem binários gigantes de <code>whisper_cpp</code>.</li>
+      </ul>
+    </div>
+
+    <h2 id="sec14">14) Smoke test de 10 minutos</h2>
+    <div class="card">
+      <p>Checklist completo no arquivo: <code>SMOKE_TEST_10_MIN.md</code>.</p>
+      <p>Critério de aprovação rápido:</p>
+      <ol>
+        <li>App sobe e a UI abre.</li>
+        <li>Conversão curta termina com sucesso.</li>
+        <li>Transcrição curta gera <code>.txt</code> e <code>.srt</code>.</li>
+        <li>Cancelamento de job funciona.</li>
+        <li>Sem erro crítico persistente no final de <code>logs/app.log</code>.</li>
+      </ol>
+    </div>
+
+    <h2>15) Checklist final</h2>
+    <div class="card">
+      <ul>
+        <li>Flask inicia sem erro e abre no navegador.</li>
+        <li>FFmpeg detectado e conversão funciona.</li>
         <li>Transcrição gera TXT/SRT coerentes.</li>
-        <li>Glossário está salvo e aplicado.</li>
+        <li>Glossário salva e aplica corretamente.</li>
         <li>Cancelamento de job interrompe de fato.</li>
-        <li>Sem loop patológico na cauda da transcrição.</li>
+        <li>Sem loop patológico na cauda.</li>
         <li>Mixagem final em M4A pronta para NotebookLM.</li>
       </ul>
     </div>
