@@ -1,0 +1,89 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <div class="panel-header">
+    <h2>Conversor local</h2>
+    <div class="mode-switch">
+      <label for="profile-main">Perfil principal</label>
+      <select id="profile-main" class="pill">
+        <option value="audio">Áudio</option>
+        <option value="video">Vídeo</option>
+        <option value="image">Imagem</option>
+        <option value="mixagem">Mixagem</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Arraste arquivos</h3>
+    <div id="drop-zone" class="drop-zone">
+      <p>Solte arquivos aqui ou clique para selecionar</p>
+      <input id="file-input" type="file" multiple />
+    </div>
+    <div class="row">
+      <label>Arquivos selecionados</label>
+      <div class="file-toolbar">
+        <div class="file-toolbar-group">
+          <button id="clear-files" class="ghost" type="button">Limpar seleção</button>
+          <button id="select-all-files" class="ghost" type="button">Selecionar todos</button>
+          <button id="deselect-all-files" class="ghost" type="button">Desmarcar todos</button>
+        </div>
+        <div id="selected-files-count" class="file-toolbar-count muted">0 de 0 marcado(s)</div>
+      </div>
+    </div>
+    <div id="file-list" class="file-list"></div>
+  </div>
+
+  <div class="card">
+    <h3>Opções</h3>
+    <div class="row">
+      <label>Perfil</label>
+      <select id="profile-preset"></select>
+    </div>
+    <div id="audio-options" class="options"></div>
+    <div id="video-options" class="options"></div>
+    <div id="image-options" class="options"></div>
+    <div id="mix-options" class="options"></div>
+    <div class="row output-row">
+      <label>Pasta padrão</label>
+      <input id="output-dir" type="text" placeholder="c:\\caminho\\downloads" />
+      <button id="browse-folder" class="ghost" type="button">Escolher pasta...</button>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="start-convert" class="primary">Iniciar conversão</button>
+    <button id="open-folder" class="ghost">Abrir pasta</button>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="status-header">
+    <h2>Status</h2>
+    <div class="status-accel-wrap">
+      <div id="status-accel-indicator" class="status-accel-indicator">Processo: sem atividade de transcricao</div>
+      <div id="status-accel-change" class="status-accel-change"></div>
+    </div>
+  </div>
+  <div id="jobs-controls" class="actions"></div>
+  <div id="jobs" class="jobs"></div>
+</section>
+
+<script>
+  fetch("/api/client-log", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ level: "info", message: "convert.html carregado" }),
+  }).catch(() => {});
+  setTimeout(() => {
+    if (!window.__convert_init_ok) {
+      fetch("/api/client-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ level: "error", message: "convert.js nao inicializou" }),
+      }).catch(() => {});
+    }
+  }, 1000);
+</script>
+<script src="/static/convert.js"></script>
+{% endblock %}

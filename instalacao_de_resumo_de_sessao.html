@@ -1,0 +1,455 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instalação de Resumo de Sessão</title>
+  <style>
+    :root {
+      --bg: #f6f3ed;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --line: #e5e7eb;
+      --accent: #0f766e;
+      --accent-soft: #ecfeff;
+      --warm: #9a3412;
+      --warm-soft: #fff7ed;
+      --soft: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #fcfaf6 0%, var(--bg) 40%, #efe9de 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 18px 56px;
+    }
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.05);
+    }
+    h1 { margin: 0 0 8px; font-size: 30px; }
+    h2 {
+      margin: 30px 0 10px;
+      font-size: 22px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+    }
+    h3 { margin: 20px 0 8px; font-size: 18px; }
+    p, li { color: var(--muted); }
+    ul, ol { margin: 8px 0 10px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 12px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 960px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #bae6fd;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .nav {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .nav a {
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: #0f172a;
+      text-decoration: none;
+    }
+    .nav a:hover { background: #eef2ff; }
+    .warn {
+      background: var(--warm-soft);
+      border: 1px solid #fed7aa;
+      color: var(--warm);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin: 10px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th { background: #f9fafb; color: #111827; }
+    a { color: #0c4a6e; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      padding: 1px 4px;
+      border-radius: 4px;
+      color: #111827;
+    }
+    .step {
+      background: var(--soft);
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin: 8px 0;
+    }
+    .step strong { color: #111827; }
+    .prompt {
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid #374151;
+      white-space: pre-wrap;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .credit {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Instalação de Resumo de Sessão</h1>
+      <p>
+        Guia completo para montar no PC um fluxo local de <strong>mixagem de áudio do Craig</strong> + <strong>transcrição</strong>,
+        com saída pronta para revisão e para uso no Google NotebookLM.
+      </p>
+      <div>
+        <span class="tag">Windows</span>
+        <span class="tag">Flask local</span>
+        <span class="tag">FFmpeg</span>
+        <span class="tag">Whisper/Faster-Whisper/WhisperX</span>
+        <span class="tag">GPU CUDA opcional</span>
+      </div>
+      <nav class="nav" aria-label="Navegação rápida">
+        <a href="#ingredientes">Ingredientes</a>
+        <a href="#conceitos">Conceitos</a>
+        <a href="#modelos">Modelos</a>
+        <a href="#implantacao">Implantação</a>
+        <a href="#notebooklm">NotebookLM</a>
+        <a href="#prompt">Prompt pronto</a>
+        <a href="#checklist">Checklist</a>
+      </nav>
+    </section>
+
+    <h2 id="ingredientes">1) Ingredientes (pré-requisitos)</h2>
+    <div class="card">
+      <h3>Hardware recomendado</h3>
+      <ul>
+        <li><strong>CPU:</strong> 6 núcleos ou mais.</li>
+        <li><strong>RAM:</strong> 16 GB mínimo (32 GB ideal para projetos longos).</li>
+        <li><strong>Disco:</strong> SSD NVMe (evita gargalo em normalização/chunks/cache).</li>
+        <li><strong>GPU (opcional, recomendada):</strong> NVIDIA com 8 GB VRAM ou mais para WhisperX/Faster-Whisper em CUDA.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Ferramentas externas obrigatórias</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Ferramenta</th>
+            <th>Para que serve no fluxo</th>
+            <th>Download oficial</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Python 3.11+ (3.13 também funciona)</td>
+            <td>Base de execução do backend Flask e dos módulos de IA.</td>
+            <td><a href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener">python.org/downloads/windows</a></td>
+          </tr>
+          <tr>
+            <td>FFmpeg (full shared build)</td>
+            <td>Conversão, normalização, extração, mixagem e processamento de áudio/vídeo.</td>
+            <td><a href="https://www.gyan.dev/ffmpeg/builds/" target="_blank" rel="noopener">gyan.dev/ffmpeg/builds</a></td>
+          </tr>
+          <tr>
+            <td>yt-dlp</td>
+            <td>Download local/remoto quando usar módulo de download.</td>
+            <td><a href="https://pypi.org/project/yt-dlp/" target="_blank" rel="noopener">pypi.org/project/yt-dlp</a></td>
+          </tr>
+          <tr>
+            <td>7-Zip (opcional)</td>
+            <td>Extrair pacote ZIP do projeto e outros arquivos compactados.</td>
+            <td><a href="https://www.7-zip.org/" target="_blank" rel="noopener">7-zip.org</a></td>
+          </tr>
+          <tr>
+            <td>Microsoft VC++ Redistributable</td>
+            <td>Dependência de DLLs em runtime para libs nativas (torch/ffmpeg/ctranslate2).</td>
+            <td><a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist" target="_blank" rel="noopener">learn.microsoft.com VC++ redist</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Ferramentas de IA (pacotes Python)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Pacote</th>
+            <th>Papel</th>
+            <th>Referência oficial</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Whisper (OpenAI)</td>
+            <td>Modelo base de transcrição de fala.</td>
+            <td><a href="https://pypi.org/project/openai-whisper/" target="_blank" rel="noopener">pypi.org/project/openai-whisper</a></td>
+          </tr>
+          <tr>
+            <td>faster-whisper</td>
+            <td>Implementação mais rápida do Whisper via CTranslate2.</td>
+            <td><a href="https://pypi.org/project/faster-whisper/" target="_blank" rel="noopener">pypi.org/project/faster-whisper</a></td>
+          </tr>
+          <tr>
+            <td>CTranslate2</td>
+            <td>Engine otimizada de inferência (CPU/GPU).</td>
+            <td><a href="https://opennmt.net/CTranslate2/" target="_blank" rel="noopener">opennmt.net/CTranslate2</a></td>
+          </tr>
+          <tr>
+            <td>WhisperX</td>
+            <td>Transcrição + alinhamento temporal avançado + diarização opcional.</td>
+            <td><a href="https://pypi.org/project/whisperx/" target="_blank" rel="noopener">pypi.org/project/whisperx</a></td>
+          </tr>
+          <tr>
+            <td>PyTorch + CUDA (opcional)</td>
+            <td>Aceleração em GPU NVIDIA.</td>
+            <td><a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">pytorch.org/get-started/locally</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="warn">
+        Para GPU NVIDIA: instalar driver atualizado primeiro e depois stack PyTorch/CUDA compatível.
+        Links: <a href="https://www.nvidia.com/Download/index.aspx" target="_blank" rel="noopener">Driver NVIDIA</a> e
+        <a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="noopener">CUDA Toolkit</a>.
+      </div>
+    </div>
+
+    <h2 id="conceitos">2) Conceitos essenciais</h2>
+    <div class="grid grid-2">
+      <section class="card">
+        <h3>O que é Whisper</h3>
+        <p>Modelo de reconhecimento de fala que transforma áudio em texto com timestamps.</p>
+
+        <h3>O que é WhisperX</h3>
+        <p>Camada sobre Whisper/Faster-Whisper para alinhamento temporal fino e diarização opcional.</p>
+
+        <h3>Normalização</h3>
+        <p>Ajusta volume e dinâmica para melhorar inteligibilidade. Pode aumentar custo de processamento.</p>
+      </section>
+      <section class="card">
+        <h3>VAD (detecção de voz)</h3>
+        <p>Separa fala de silêncio/ruído para focar processamento no que importa.</p>
+
+        <h3>Chunking + overlap</h3>
+        <p>Divide o áudio em blocos com sobreposição para reduzir risco de loop e permitir retomada por chunk.</p>
+
+        <h3>Glossário/contexto</h3>
+        <p>Lista de termos do universo da campanha (ex.: nomes próprios) para reduzir erros absurdos.</p>
+      </section>
+    </div>
+
+    <h2 id="modelos">3) Modelos e diferenças práticas</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Modelo</th>
+            <th>Velocidade</th>
+            <th>Qualidade</th>
+            <th>Quando usar</th>
+            <th>Link oficial do modelo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>tiny</td><td>Muito alta</td><td>Baixa</td><td>Rascunho rápido, hardware fraco.</td><td><a href="https://huggingface.co/openai/whisper-tiny" target="_blank" rel="noopener">openai/whisper-tiny</a></td></tr>
+          <tr><td>base</td><td>Alta</td><td>Baixa/média</td><td>Prévia com pouco custo.</td><td><a href="https://huggingface.co/openai/whisper-base" target="_blank" rel="noopener">openai/whisper-base</a></td></tr>
+          <tr><td>small</td><td>Média/alta</td><td>Média</td><td>Bom equilíbrio para testes.</td><td><a href="https://huggingface.co/openai/whisper-small" target="_blank" rel="noopener">openai/whisper-small</a></td></tr>
+          <tr><td>medium</td><td>Média</td><td>Boa</td><td>Produção com prazo.</td><td><a href="https://huggingface.co/openai/whisper-medium" target="_blank" rel="noopener">openai/whisper-medium</a></td></tr>
+          <tr><td>large-v3</td><td>Mais lento</td><td>Muito alta</td><td>Melhor qualidade para português e áudio difícil.</td><td><a href="https://huggingface.co/openai/whisper-large-v3" target="_blank" rel="noopener">openai/whisper-large-v3</a></td></tr>
+          <tr><td>distil-large-v3</td><td>Mais rápido que large-v3</td><td>Próxima do large-v3</td><td>Quando precisa reduzir tempo sem perder muito.</td><td><a href="https://huggingface.co/distil-whisper/distil-large-v3" target="_blank" rel="noopener">distil-whisper/distil-large-v3</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="implantacao">4) Modo de preparo (implantação em ordem)</h2>
+    <div class="card">
+      <ol>
+        <li>Instalar Python, FFmpeg (full shared), VC++ Redistributable e yt-dlp.</li>
+        <li>Confirmar no terminal: <code>python --version</code> e <code>ffmpeg -version</code>.</li>
+        <li>Obter o projeto <strong>midia-faren</strong> por pacote ZIP, pasta compartilhada ou cópia local (sem Git obrigatório).</li>
+        <li>Executar <code>executar.bat</code> para preparar o ambiente e subir o Flask.</li>
+        <li>Abrir no navegador e validar módulos: Download, Conversor e Transcrição.</li>
+        <li>Configurar backend (faster-whisper ou whisperx), modelo e glossário.</li>
+        <li>Rodar um teste curto (5-10 minutos) antes de processar sessão longa.</li>
+        <li>Executar sessão completa do Craig (ZIP/FLAC), monitorando progresso, ETA e logs.</li>
+      </ol>
+      <p><strong>Links rápidos de download (oficiais):</strong></p>
+      <ul>
+        <li>Python: <a href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener">python.org/downloads/windows</a></li>
+        <li>FFmpeg full shared: <a href="https://www.gyan.dev/ffmpeg/builds/" target="_blank" rel="noopener">gyan.dev/ffmpeg/builds</a></li>
+        <li>VC++ Redistributable: <a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist" target="_blank" rel="noopener">learn.microsoft.com VC++ redist</a></li>
+        <li>yt-dlp: <a href="https://pypi.org/project/yt-dlp/" target="_blank" rel="noopener">pypi.org/project/yt-dlp</a></li>
+        <li>7-Zip (opcional): <a href="https://www.7-zip.org/" target="_blank" rel="noopener">7-zip.org</a></li>
+        <li>Projeto midia-faren: pacote ZIP/pasta local fornecida pelo mantenedor.</li>
+      </ul>
+      <p>
+        Comando de referência do modo rápido (exemplo recomendado):<br />
+        <code>whisperx *.flac --model large-v3 --language pt --device cuda --compute_type float16 --batch_size 4 --output_format json srt --initial_prompt "glossário"</code>
+      </p>
+    </div>
+
+    <h2 id="notebooklm">5) Passo a passo para resumo no Google NotebookLM</h2>
+    <div class="card">
+      <p>Link oficial: <a href="https://notebooklm.google.com/" target="_blank" rel="noopener">https://notebooklm.google.com/</a></p>
+
+      <div class="step"><strong>Passo 1:</strong> abrir o NotebookLM e clicar em <em>Criar novo notebook</em>.</div>
+      <div class="step"><strong>Passo 2:</strong> inserir o áudio final em <strong>M4A</strong> (gerado pelo módulo de mixagem).</div>
+      <div class="step"><strong>Passo 3:</strong> aguardar o processamento completo da fonte de áudio.</div>
+      <div class="step"><strong>Passo 4:</strong> abrir a opção <em>Resumo de áudio</em>.</div>
+      <div class="step"><strong>Passo 5:</strong> escolher o modo <em>Análise detalhada</em>.</div>
+      <div class="step"><strong>Passo 6:</strong> em idioma, selecionar <strong>Português (Brasil)</strong>.</div>
+    </div>
+
+    <h2 id="prompt">6) Prompt pronto (organizado para IA)</h2>
+    <div class="card">
+      <p>Use este texto no NotebookLM para gerar o resumo em formato de conto (modelo genérico):</p>
+      <div class="prompt">Gere um resumo da sessão de RPG baseada no áudio "[nome do áudio]" no cenário "[nome do cenário]".
+
+Quero um texto em formato de conto narrado em primeira pessoa do plural ("nós"), como se um dos jogadores estivesse contando para amigos o que aconteceu.
+
+Regras do resultado:
+1) Não faça análise técnica da mesa.
+2) Não foque em elogiar ou exaltar pessoas específicas.
+3) Conte os acontecimentos da sessão com narrativa fluida e empolgante.
+
+Estrutura esperada:
+1) Abertura da sessão:
+   - como nós chegamos;
+   - contexto inicial do local;
+   - quem eram os personagens presentes.
+
+2) Desenvolvimento:
+   - conflitos e tensões;
+   - estratégias que nós tentamos;
+   - decisões e indecisões;
+   - reviravoltas, surpresas e consequências;
+   - acontecimentos importantes em ordem clara.
+
+3) Fechamento:
+   - estado final do grupo;
+   - perguntas em aberto;
+   - gancho para continuação.
+
+Diretriz de fidelidade:
+- Use os nomes e fatos das fontes enviadas (áudio + notas de contexto), sem inventar fatos fora do material.
+- Se algo estiver ambíguo, indique como possibilidade em vez de afirmar com certeza.
+
+Final obrigatório (adapte ao contexto):
+"Vamos ver aonde essa trama vai nos levar na próxima sessão."</div>
+
+      <p style="margin-top:12px;">Sugestão: adicione também uma fonte em texto com contexto da sessão antes de pedir o resumo.</p>
+      <div class="prompt">[NOTAS DE CONTEXTO DA SESSAO]
+
+Nome do audio: [nome do audio]
+Nome do cenario: [nome do cenario]
+Sistema: [sistema de RPG]
+Resumo do contexto inicial: [contexto inicial da sessao]
+
+Personagens de jogadores:
+- Jogador: [nome do jogador 1]
+  Personagem: [nome do personagem 1]
+  Conceito: [raca/classe/profissao]
+  Vinculo ou origem: [faccao/cidade/clan/grupo]
+  Motivacao atual: [objetivo na sessao]
+
+- Jogador: [nome do jogador 2]
+  Personagem: [nome do personagem 2]
+  Conceito: [raca/classe/profissao]
+  Vinculo ou origem: [faccao/cidade/clan/grupo]
+  Motivacao atual: [objetivo na sessao]
+
+NPCs importantes:
+- NPC: [nome do NPC 1]
+  Papel na historia: [funcao]
+  Relacao com o grupo: [como influencia o grupo]
+
+- NPC: [nome do NPC 2]
+  Papel na historia: [funcao]
+  Relacao com o grupo: [como influencia o grupo]
+
+Termos e nomes que nao devem ser corrigidos:
+- [termo 1]
+- [termo 2]
+- [local 1]
+
+Observacoes de pronuncia ou escrita:
+- [nome dificil 1] -> [forma correta]
+- [nome dificil 2] -> [forma correta]</div>
+    </div>
+
+    <h2 id="checklist">7) Checklist final</h2>
+    <div class="card">
+      <ul>
+        <li>Flask inicia sem erro e interface abre no navegador.</li>
+        <li>FFmpeg detectado e conversão funcionando.</li>
+        <li>Transcrição gera TXT/SRT coerentes.</li>
+        <li>Glossário está salvo e aplicado.</li>
+        <li>Cancelamento de job interrompe de fato.</li>
+        <li>Sem loop patológico na cauda da transcrição.</li>
+        <li>Mixagem final em M4A pronta para NotebookLM.</li>
+      </ul>
+    </div>
+
+    <p class="credit">
+      Créditos: desenvolvido por <strong>Paulo "Faren" Lima</strong>, do
+      <a href="https://artificiorpg.com/" target="_blank" rel="noopener">Artifício RPG</a>.
+    </p>
+  </main>
+</body>
+</html>

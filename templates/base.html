@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mídia Faren</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">MF</span>
+      <div>
+        <h1>Mídia Faren</h1>
+        <p>Download e conversão local</p>
+      </div>
+    </div>
+    <nav>
+      <a href="/">Download</a>
+      <a href="/convert">Conversor</a>
+      <a href="/transcribe">Transcrição</a>
+      <button id="reset-log" class="ghost nav-btn">Resetar e limpar log</button>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <span>Uso local — sem dependência de APIs externas</span>
+  </footer>
+</body>
+</html>

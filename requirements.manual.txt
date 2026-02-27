@@ -1,0 +1,12 @@
+﻿# Dependencias base
+flask
+requests
+yt-dlp
+
+# Stack IA (CUDA 12.8 no Windows, conforme executar.bat)
+faster-whisper==1.2.1
+whisperx==3.8.0
+ctranslate2==4.7.1
+
+# Instalar torch/torchaudio separadamente com index CUDA:
+# pip install --force-reinstall torch==2.8.0+cu128 torchaudio==2.8.0+cu128 --index-url https://download.pytorch.org/whl/cu128

@@ -1,0 +1,274 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <div class="panel-header">
+    <h2>Transcrição local</h2>
+  </div>
+
+  <div class="card card-file-intake">
+    <h3>Entrada de arquivos</h3>
+    <div id="drop-zone" class="drop-zone">
+      <p>Solte arquivos aqui ou clique para selecionar</p>
+      <input id="file-input" type="file" multiple />
+    </div>
+    <div class="file-toolbar">
+      <div class="file-toolbar-group">
+        <button id="pick-local-files" class="ghost" type="button">Selecionar no PC</button>
+        <button id="clear-files" class="ghost" type="button">Limpar seleção</button>
+      </div>
+      <div class="file-toolbar-group">
+        <button id="select-all-files" class="ghost" type="button">Selecionar todos</button>
+        <button id="deselect-all-files" class="ghost" type="button">Desmarcar todos</button>
+      </div>
+      <div id="selected-files-count" class="file-toolbar-count muted">0 de 0 marcado(s)</div>
+    </div>
+    <h4 class="file-list-title">Arquivos selecionados</h4>
+    <div id="file-list" class="file-list"></div>
+  </div>
+
+  <div class="card">
+    <h3>Opções</h3>
+    <div class="transcribe-options-grid">
+      <section class="transcribe-group">
+        <h4 class="transcribe-group-title">Estratégia</h4>
+        <div class="row">
+          <label>Escolha guiada</label>
+          <select id="transcribe-guided-mode">
+            <option value="manual">Manual (avançado)</option>
+            <option value="whisperx_cuda_fast">WhisperX rápido (CUDA)</option>
+            <option value="whisperx_cuda_balanced">WhisperX equilibrado (CUDA + checkpoint)</option>
+            <option value="whisperx_cli_puro">WhisperX CLI puro (Dani)</option>
+            <option value="craig_long_best">ZIP Craig grande - Melhor qualidade (recomendado)</option>
+            <option value="craig_long_fast">ZIP Craig grande - Mais rápido</option>
+            <option value="single_long_best">Áudio único grande - Melhor qualidade</option>
+            <option value="single_long_fast">Áudio único grande - Mais rápido</option>
+          </select>
+        </div>
+        <p id="transcribe-guided-help" class="hint"></p>
+        <div class="transcribe-inline-grid">
+          <div class="row">
+            <label>Perfil</label>
+            <select id="transcribe-profile">
+              <option value="auto">Auto (recomendado)</option>
+              <option value="craig_multitrack">Craig multi-faixa</option>
+              <option value="single_channel">Áudio único</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>Modo</label>
+            <select id="transcribe-mode">
+              <option value="single">Modelo único</option>
+              <option value="compare">Comparar todos os modelos</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <label>Backend</label>
+          <select id="transcribe-backend">
+            <option value="faster_whisper">faster-whisper (recomendado)</option>
+            <option value="whisper_cpp">whisper.cpp local</option>
+            <option value="whisperx">WhisperX</option>
+          </select>
+        </div>
+        <div class="row">
+          <label>Modelo</label>
+          <select id="transcribe-model"></select>
+        </div>
+        <p id="transcribe-model-help" class="hint"></p>
+      </section>
+
+      <section class="transcribe-group">
+        <h4 class="transcribe-group-title">Idioma e Voz</h4>
+        <div class="transcribe-inline-grid">
+          <div class="row">
+            <label>Idioma</label>
+            <select id="transcribe-language">
+              <option value="pt">Português</option>
+              <option value="en">Inglês</option>
+              <option value="auto">Auto</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>Diarização</label>
+            <select id="transcribe-diarize">
+              <option value="on">Ativar</option>
+              <option value="off">Desativar</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>Normalizar áudio</label>
+            <select id="transcribe-normalize">
+              <option value="on">Ativar</option>
+              <option value="off">Desativar</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>VAD (remoção de silêncio)</label>
+            <select id="transcribe-vad">
+              <option value="on">Ativar</option>
+              <option value="off">Desativar</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>VAD threshold (dB)</label>
+            <input id="transcribe-vad-threshold" type="text" placeholder="-30" />
+          </div>
+          <div class="row">
+            <label>VAD min silêncio (s)</label>
+            <input id="transcribe-vad-min-silence" type="text" placeholder="0.3" />
+          </div>
+        </div>
+      </section>
+
+      <section class="transcribe-group">
+        <h4 class="transcribe-group-title">Performance</h4>
+        <div class="transcribe-inline-grid">
+          <div class="row">
+            <label>Threads</label>
+            <input id="transcribe-threads" type="text" />
+          </div>
+          <div class="row">
+            <label>Beam size</label>
+            <input id="transcribe-beam" type="text" />
+          </div>
+          <div class="row">
+            <label>Max Len</label>
+            <input id="transcribe-max-len" type="text" />
+          </div>
+          <div class="row">
+            <label>Chunk (mm:ss)</label>
+            <input id="transcribe-chunk-seconds" type="text" placeholder="05:00" />
+          </div>
+          <div class="row">
+            <label>Overlap chunk (s)</label>
+            <input id="transcribe-chunk-overlap-seconds" type="text" placeholder="1.5" />
+          </div>
+          <div class="row">
+            <label>Dispositivo IA</label>
+            <select id="transcribe-device">
+              <option value="">Auto</option>
+              <option value="cuda">CUDA (GPU)</option>
+              <option value="cpu">CPU</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>Compute type</label>
+            <select id="transcribe-compute-type">
+              <option value="">Auto</option>
+              <option value="float16">float16</option>
+              <option value="int8">int8</option>
+              <option value="float32">float32</option>
+              <option value="int8_float16">int8_float16</option>
+              <option value="int8_float32">int8_float32</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>WhisperX batch size</label>
+            <input id="whisperx-batch-size" type="text" placeholder="4" />
+          </div>
+          <div class="row">
+            <label>Prompt inicial (opcional)</label>
+            <input id="transcribe-initial-prompt" type="text" placeholder="ex: glossário The Witcher: Kovir, Novigrad..." />
+          </div>
+        </div>
+      </section>
+
+      <section class="transcribe-group transcribe-group-full">
+        <h4 class="transcribe-group-title">Glossário</h4>
+        <div class="row glossary-header-row">
+          <label>Correções ativas</label>
+        </div>
+        <div id="transcribe-glossary-list" class="file-list"></div>
+        <div id="glossary-controls" class="glossary-controls">
+          <button id="glossary-add-row" class="ghost" type="button">Adicionar linha</button>
+        </div>
+        <p class="hint">Palavra referencia fica na esquerda. Palavra contextual (opcional) fica na direita.</p>
+        <p class="hint">Com os 2 campos preenchidos: correção contextual -&gt; referência. Com apenas referência: termo conhecido para contexto.</p>
+        <p class="hint">Saída sempre em .txt e .srt (mesma estrutura do transcriber).</p>
+      </section>
+
+      <section class="transcribe-group transcribe-group-full">
+        <h4 class="transcribe-group-title">Saída</h4>
+        <div class="row">
+          <label>Gerar JSON</label>
+          <select id="transcribe-output-json">
+            <option value="on">Ativar (json + srt + txt)</option>
+            <option value="off">Desativar (srt + txt)</option>
+          </select>
+        </div>
+        <div class="row output-row">
+          <label>Pasta padrão</label>
+          <input id="output-dir" type="text" placeholder="c:\\caminho\\downloads" />
+          <button id="browse-folder" class="ghost" type="button">Escolher pasta...</button>
+        </div>
+      </section>
+
+      <section class="transcribe-group transcribe-group-full">
+        <h4 class="transcribe-group-title">Guia prático (leigo)</h4>
+        <div class="tips-grid">
+          <p><strong>Escolha guiada:</strong> aplica combinações prontas. Use <strong>WhisperX rápido (CUDA)</strong> se tiver GPU NVIDIA.</p>
+          <p><strong>Perfil:</strong> <strong>Craig multi-faixa</strong> para ZIP do Craig; <strong>Áudio único</strong> para um arquivo só.</p>
+          <p><strong>Modo:</strong> <strong>Modelo único</strong> é mais rápido; <strong>Comparar</strong> testa vários modelos (mais demorado).</p>
+          <p><strong>Backend:</strong> <strong>faster-whisper</strong> é o mais estável geral; <strong>WhisperX</strong> pode ser mais rápido/alinhado; <strong>whisper.cpp</strong> depende dos binários locais.</p>
+          <p><strong>Modelo:</strong> <strong>large-v3</strong> = melhor qualidade; <strong>medium/distil</strong> = mais rápido.</p>
+          <p><strong>Idioma:</strong> fixe em <strong>Português</strong> quando souber o idioma para reduzir erros.</p>
+          <p><strong>Diarização:</strong> tenta separar falantes. Pode aumentar tempo e erro em áudio ruim.</p>
+          <p><strong>Normalizar áudio:</strong> ajusta volume para o motor entender melhor. Recomendado quase sempre.</p>
+          <p><strong>VAD:</strong> remove silêncio. Pode acelerar, mas pode afetar marcação temporal em alguns casos.</p>
+          <p><strong>Threads:</strong> mais threads podem acelerar no CPU (até certo ponto).</p>
+          <p><strong>Beam size:</strong> maior = mais qualidade e mais lento; menor = mais rápido e mais arriscado.</p>
+          <p><strong>Max Len:</strong> limita tamanho de trecho gerado por vez. Ajuda a conter repetições exageradas.</p>
+          <p><strong>Chunk / Overlap:</strong> divide áudio em blocos. Chunk maior = menos cortes e mais memória; overlap evita perder palavra na borda.</p>
+          <p><strong>Dispositivo IA:</strong> <strong>CUDA</strong> usa GPU NVIDIA; <strong>CPU</strong> roda em processador.</p>
+          <p><strong>Compute type:</strong> <strong>float16</strong> é rápido na GPU; <strong>int8</strong> economiza memória; <strong>auto</strong> escolhe sozinho.</p>
+          <p><strong>WhisperX batch size:</strong> maior acelera, mas consome mais VRAM. Se der erro de memória, diminua.</p>
+          <p><strong>Prompt inicial:</strong> contexto do seu universo (nomes, termos de RPG). Ajuda o motor a errar menos.</p>
+          <p><strong>Glossário:</strong> reforça termos conhecidos e correções contextuais.</p>
+          <p><strong>Gerar JSON:</strong> cria saída estruturada além de SRT/TXT para integração com outros fluxos.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="start-transcribe" class="primary">Iniciar transcrição</button>
+    <button id="resume-transcribe" class="ghost">Retomar tarefa</button>
+    <button id="open-folder" class="ghost">Abrir pasta</button>
+  </div>
+
+  <div class="actions">
+    <button id="cleanup-transcribe" class="ghost">Limpar todo cache e resquícios</button>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="status-header">
+    <h2>Status da fila</h2>
+    <div class="status-accel-wrap">
+      <div id="status-accel-indicator" class="status-accel-indicator">Processo: sem atividade de transcrição</div>
+      <div id="status-accel-change" class="status-accel-change"></div>
+    </div>
+  </div>
+  <div id="jobs-controls" class="actions"></div>
+  <div id="jobs" class="jobs"></div>
+</section>
+
+
+<script>
+  fetch("/api/client-log", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ level: "info", message: "transcribe.html carregado" }),
+  }).catch(() => {});
+  setTimeout(() => {
+    if (!window.__transcribe_init_ok) {
+      fetch("/api/client-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ level: "error", message: "transcribe.js nao inicializou" }),
+      }).catch(() => {});
+    }
+  }, 1000);
+</script>
+<script src="/static/transcribe.js"></script>
+{% endblock %}

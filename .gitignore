@@ -1,0 +1,33 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# Virtual envs
+.venv/
+.venv_cuda/
+
+# Runtime data
+logs/*
+!logs/.gitkeep
+
+downloads/*
+!downloads/.gitkeep
+
+data/uploads/*
+!data/uploads/.gitkeep
+
+data/transcribe_cache/*
+!data/transcribe_cache/.gitkeep
+
+data/transcribe_cache/convert/*
+!data/transcribe_cache/convert/.gitkeep
+
+data/transcribe_cache/normalize/*
+!data/transcribe_cache/normalize/.gitkeep
+
+# Optional temp
+*.tmp
+*.log

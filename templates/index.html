@@ -1,0 +1,117 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <div class="panel-header">
+    <h2>Nova fila</h2>
+    <div class="mode-switch">
+      <button id="mode-audio" class="pill">Áudio</button>
+      <button id="mode-video" class="pill">Vídeo</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Links (1 por linha)</h3>
+      <textarea id="links-text" placeholder="Cole URLs aqui..."></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Cards dinâmicos</h3>
+        <button id="add-card" class="ghost">+ adicionar</button>
+      </div>
+      <p class="hint">Cada card é um link individual. Use para organizar links diferentes (ex.: playlist + vídeo + shorts).</p>
+      <div id="card-list" class="card-list"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Opções</h3>
+    <div id="audio-options" class="options active">
+      <div class="row">
+        <label>Formato</label>
+        <select id="audio-format">
+          <option value="mp3">mp3</option>
+          <option value="wav">wav</option>
+          <option value="ogg">ogg</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Bitrate</label>
+        <select id="audio-bitrate">
+          <option value="96">96</option>
+          <option value="128">128</option>
+          <option value="160">160</option>
+          <option value="192" selected>192</option>
+          <option value="256">256</option>
+          <option value="320">320</option>
+          <option value="q5">q5</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Modo</label>
+        <select id="audio-mode">
+          <option value="cbr" selected>cbr</option>
+          <option value="vbr">vbr</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Preset</label>
+        <select id="audio-preset">
+          <option value="" selected>(nenhum)</option>
+        </select>
+      </div>
+    </div>
+    <div id="video-options" class="options"></div>
+
+    <input type="hidden" id="yt-client" />
+    <input type="hidden" id="yt-po-token" />
+    <input type="hidden" id="yt-cookies" />
+    <input type="hidden" id="yt-cookies-file" />
+    <input type="hidden" id="yt-js-runtime" />
+    <input type="hidden" id="yt-remote-components" />
+
+    <div class="row output-row">
+      <label>Pasta padrão</label>
+      <input id="output-dir" type="text" placeholder="c:\\caminho\\downloads" />
+      <button id="browse-folder" class="ghost" type="button">Escolher pasta...</button>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="start-queue" class="primary">Iniciar fila</button>
+    <button id="clear-all" class="ghost">Limpar</button>
+    <button id="open-folder" class="ghost">Abrir pasta</button>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="status-header">
+    <h2>Status</h2>
+    <div class="status-accel-wrap">
+      <div id="status-accel-indicator" class="status-accel-indicator">Processo: sem atividade de transcrição</div>
+      <div id="status-accel-change" class="status-accel-change"></div>
+    </div>
+  </div>
+  <div class="actions">
+    <button id="pause-queue" class="ghost">Pausar fila</button>
+    <button id="resume-queue" class="ghost">Retomar fila</button>
+    <button id="cancel-queue" class="ghost">Cancelar fila</button>
+    <button id="clear-queue" class="ghost">Limpar fila</button>
+  </div>
+  <div id="status-summary" class="hint"></div>
+  <div id="jobs" class="jobs"></div>
+</section>
+
+<div id="job-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Detalhes do job</h3>
+      <button id="job-modal-close" class="ghost">Fechar</button>
+    </div>
+    <pre id="job-modal-body"></pre>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+{% endblock %}
