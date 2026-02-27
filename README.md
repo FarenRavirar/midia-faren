@@ -7,6 +7,28 @@ Você pode:
 - descompactar,
 - executar `executar.bat`.
 
+## Áudio de exemplo incluído (para teste imediato)
+
+Este pacote já inclui um áudio real de sessão para quem quiser validar o fluxo completo sem preparar arquivos próprios:
+
+- Arquivo: `docs/data/Oneshot-ODiaboDoPoco-Terca.ogg`
+- Contexto: one-shot no cenário de **The Witcher**
+- Mesa: **3 jogadores**
+- Sistema: **DND 5e 2024**
+
+Player do exemplo:
+
+<audio controls preload="metadata" src="docs/data/Oneshot-ODiaboDoPoco-Terca.ogg">
+  Seu navegador não suportou o player. Use o link direto abaixo.
+</audio>
+
+Link direto: [Ouvir exemplo OGG](docs/data/Oneshot-ODiaboDoPoco-Terca.ogg)
+
+Use este arquivo para:
+- testar transcrição com marcação de tempo e falantes,
+- validar glossário e qualidade dos modelos,
+- gerar material para o passo de resumo no NotebookLM.
+
 ---
 
 ## 1) O que este pacote contém

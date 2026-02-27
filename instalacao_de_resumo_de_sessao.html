@@ -76,6 +76,26 @@
       text-decoration: none;
     }
     .nav a:hover { background: #eef2ff; }
+    .cta-row {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn-cta {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #0b5f59;
+      background: #0f766e;
+      color: #ffffff !important;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .btn-cta:hover {
+      background: #0c655e;
+      text-decoration: none;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -125,12 +145,31 @@
       <p>
         Esta página contém as <strong>mesmas informações técnicas do README.md</strong>, com visual organizado.
       </p>
+      <div class="card">
+        <p><strong>Áudio de exemplo incluído para teste imediato</strong></p>
+        <ul>
+          <li>Arquivo: <code>docs/data/Oneshot-ODiaboDoPoco-Terca.ogg</code></li>
+          <li>Contexto: one-shot no cenário de <strong>The Witcher</strong></li>
+          <li>Mesa: <strong>3 jogadores</strong></li>
+          <li>Sistema: <strong>DND 5e 2024</strong></li>
+        </ul>
+        <p><strong>Player do exemplo</strong></p>
+        <audio controls preload="metadata" style="width:100%;">
+          <source src="docs/data/Oneshot-ODiaboDoPoco-Terca.ogg" type="audio/ogg" />
+          Seu navegador não suportou o player.
+        </audio>
+        <p><a href="docs/data/Oneshot-ODiaboDoPoco-Terca.ogg">Ouvir exemplo OGG (link direto)</a></p>
+        <p>Use este arquivo para validar transcrição, marcação de tempo/falantes, glossário e o fluxo de resumo.</p>
+      </div>
       <div>
         <span class="tag">Windows</span>
         <span class="tag">Sem Git obrigatório</span>
         <span class="tag">Flask</span>
         <span class="tag">Transcrição + Mixagem</span>
         <span class="tag">GPU CUDA opcional</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn-cta" href="https://github.com/FarenRavirar/midia-faren/" target="_blank" rel="noopener">Abrir GitHub principal do projeto</a>
       </div>
       <nav class="nav" aria-label="Navegação rápida">
         <a href="#sec1">1) Pacote</a>
