@@ -8,7 +8,8 @@ def _compile_pattern(source):
     escaped = re.escape(source)
     start_boundary = bool(re.match(r"^\w", source, flags=re.UNICODE))
     end_boundary = bool(re.search(r"\w$", source, flags=re.UNICODE))
-    pattern = f"{r'\b' if start_boundary else ''}{escaped}{r'\b' if end_boundary else ''}"
+    b_bound = r'\b'
+    pattern = f"{b_bound if start_boundary else ''}{escaped}{b_bound if end_boundary else ''}"
     return re.compile(pattern, flags=re.IGNORECASE)
 
 

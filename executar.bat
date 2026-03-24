@@ -9,13 +9,20 @@ set "SETUP_ENV=0"
 set "RECREATE_VENV=0"
 set "FFMPEG_PATH_MODE=off"
 set "ROOT_DIR=%CD%"
-set "VENV_DIR=%ROOT_DIR%\.venv_cuda"
+if not exist "C:\projetos\.venvs" mkdir "C:\projetos\.venvs"
+set "VENV_DIR=C:\projetos\.venvs\cuda_shared"
 set "PYTHON_BOOTSTRAP="
 set "PYTHON_CMD="
 set "FFMPEG_SHARED_BIN=%ROOT_DIR%\tools\ffmpeg\ffmpeg-7.1.1-full_build-shared\bin"
 set "MFAREN_TMP_ROOT=D:\midia_temp"
 set "MFAREN_DATA_ROOT=D:\midia-faren-data"
 set "MFAREN_MIGRATION_STAMP=%MFAREN_DATA_ROOT%\.migrated_from_c.stamp"
+set "HF_HOME=%MFAREN_DATA_ROOT%\model_cache"
+set "TORCH_HOME=%MFAREN_DATA_ROOT%\torch_cache"
+
+echo [INFO] Contingencia Anti-Travas: Varrendo processos orfaos que bloqueiam arquivos...
+for /f "tokens=5" %%p in ('netstat -aon ^| findstr :5000 ^| findstr LISTENING') do taskkill /F /PID %%p >nul 2>&1
+wmic process where "name='python.exe' and ExecutablePath like '%%cuda_shared%%'" call terminate >nul 2>&1
 
 :parse_args
 if "%~1"=="" goto after_parse_args
@@ -104,16 +111,23 @@ if /I "%FFMPEG_PATH_MODE%"=="off" (
       )
     )
   ) else (
-    echo [2/9] [WARN] FFmpeg shared nao encontrado em:
-    echo       %FFMPEG_SHARED_BIN%
+    echo [2/9] FFmpeg ausente. Auto-baixando build shared 7.1.1 para pasta tools...
+    if not exist "%ROOT_DIR%\tools\ffmpeg" mkdir "%ROOT_DIR%\tools\ffmpeg"
+    curl -# -L -o "%ROOT_DIR%\tools\ffmpeg\ffmpeg.zip" https://github.com/GyanD/codexffmpeg/releases/download/7.1.1/ffmpeg-7.1.1-full_build-shared.zip
+    tar -xf "%ROOT_DIR%\tools\ffmpeg\ffmpeg.zip" -C "%ROOT_DIR%\tools\ffmpeg"
+    del /Q "%ROOT_DIR%\tools\ffmpeg\ffmpeg.zip" >nul 2>&1
+    set "PATH=%FFMPEG_SHARED_BIN%;!PATH!"
+    echo [2/9] FFmpeg baixado e injetado via PATH local com sucesso.
   )
 )
 
 echo [3/9] Validando Python do venv...
 "%PYTHON_CMD%" -c "import sys; print('python=', sys.executable); print('version=', sys.version)"
+"%PYTHON_CMD%" -c "import sys; sys.exit(0 if sys.version_info < (3,14) else 1)" >nul 2>&1
 if errorlevel 1 (
-  echo [ERRO] Python do venv indisponivel.
-  goto :fail
+  echo [ERRO] Python do venv ^(3.14 ou superior^) indisponivel para WhisperX.
+  echo [INFO] Por favor, recrie o venv usando: executar.bat --setup-env --recreate-venv
+  goto :fail_with_help
 )
 
 if "%CHECK_ONLY%"=="1" goto check_only
@@ -129,6 +143,9 @@ if "%SETUP_ENV%"=="0" (
 )
 
 if "%SETUP_ENV%"=="1" (
+  echo [INFO] Higienizando lixo de bloqueios - limpando pacotes corrompidos do PIP...
+  call :clear_pip_locks
+
   echo [4/9] Atualizando ferramentas base de instalacao...
   "%PYTHON_CMD%" -m pip install --upgrade pip setuptools wheel
   if errorlevel 1 goto :fail
@@ -137,8 +154,8 @@ if "%SETUP_ENV%"=="1" (
   "%PYTHON_CMD%" -m pip install --upgrade flask requests yt-dlp
   if errorlevel 1 goto :fail
 
-  echo [6/9] Instalando stack CUDA fixa - PyTorch 2.8.0 + cu128...
-  "%PYTHON_CMD%" -m pip install --upgrade --force-reinstall torch==2.8.0+cu128 torchaudio==2.8.0+cu128 --index-url https://download.pytorch.org/whl/cu128
+  echo [6/9] Instalando stack CUDA fixa - PyTorch 2.9.1 + cu128...
+  "%PYTHON_CMD%" -m pip install --upgrade torch==2.9.1+cu128 torchaudio==2.9.1+cu128 --index-url https://download.pytorch.org/whl/cu128
   if errorlevel 1 goto :fail
 
   echo [7/9] Instalando stack de transcricao fixa...
@@ -167,11 +184,7 @@ if errorlevel 1 (
   "%PYTHON_CMD%" -m pip check
 )
 
-echo [INFO] Liberando porta 5000...
-for /f "tokens=5" %%p in ('netstat -aon ^| findstr :5000 ^| findstr LISTENING') do (
-  taskkill /F /PID %%p >nul 2>&1
-)
-
+echo [INFO] Ambiente verificado e portas higienizadas.
 echo Iniciando Flask...
 set "MFAREN_DEBUG=0"
 start "" "%APP_URL%"
@@ -212,19 +225,40 @@ if not errorlevel 1 (
   echo [WARN] Python 3.11 nao encontrado. Usando 3.13.
   exit /b 0
 )
-python -c "import sys" >nul 2>&1
+python -c "import sys; sys.exit(0 if sys.version_info < (3,14) else 1)" >nul 2>&1
 if not errorlevel 1 (
   set "PYTHON_BOOTSTRAP=python"
   echo [WARN] py launcher indisponivel. Usando python do PATH.
   exit /b 0
 )
-echo [ERRO] Nenhum Python encontrado.
-echo Instale Python 3.11+ e tente novamente.
+
+echo [INFO] Python 3.11 ausente. Iniciando auto-instalacao nativa (sem necessidade de admin)...
+set "PY_INSTALLER=%TEMP%\python-3.11.9-amd64.exe"
+curl -# -L -o "%PY_INSTALLER%" https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe
+if not exist "%PY_INSTALLER%" (
+  echo [ERRO] Falha ao efetuar download do Python.
+  exit /b 1
+)
+echo [INFO] Instalando executaveis invisivelmente no AppData do usuario...
+start /wait "" "%PY_INSTALLER%" /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
+del /Q "%PY_INSTALLER%" >nul 2>&1
+
+set "LOCAL_PY=%LOCALAPPDATA%\Programs\Python\Python311\python.exe"
+if exist "%LOCAL_PY%" (
+  set "PYTHON_BOOTSTRAP=%LOCAL_PY%"
+  echo [INFO] Python 3.11.9 instalado na maquina e injetado com sucesso!
+  exit /b 0
+)
+echo [ERRO] Auto-instalacao do Python falhou. Baixe de: https://www.python.org/downloads/windows/
 exit /b 1
 
 :check_ai_stack
-"%PYTHON_CMD%" -c "import sys,torch,torchaudio,importlib.metadata as md; ok=(torch.__version__=='2.8.0+cu128' and torchaudio.__version__=='2.8.0+cu128' and md.version('whisperx')=='3.8.0' and md.version('faster-whisper')=='1.2.1' and md.version('ctranslate2').startswith('4.7.1')); sys.exit(0 if ok else 1)" >nul 2>&1
+"%PYTHON_CMD%" -c "import sys,torch,torchaudio,importlib.metadata as md; ok=(torch.__version__=='2.9.1+cu128' and torchaudio.__version__=='2.9.1+cu128' and md.version('whisperx')=='3.8.0' and md.version('faster-whisper')=='1.2.1' and md.version('ctranslate2').startswith('4.7.1')); sys.exit(0 if ok else 1)" >nul 2>&1
 exit /b %ERRORLEVEL%
+
+:clear_pip_locks
+for /d %%i in ("%VENV_DIR%\Lib\site-packages\~*") do rmdir /s /q "%%i" >nul 2>&1
+exit /b 0
 
 :migrate_data_to_d
 set "MIG_FAIL=0"
@@ -278,12 +312,22 @@ endlocal & exit /b 0
 
 :fail_with_help
 echo.
+echo =======================================================
 echo [ERRO] Ambiente nao esta pronto para CUDA/WhisperX.
-echo Passos recomendados:
-echo   1^) Instalar Python 3.11 (recomendado para estabilidade no Windows)
-echo   2^) Executar: executar.bat --setup-env --recreate-venv
-echo   3^) Conferir ffmpeg shared em:
+echo GUIA DE SOLUCAO PARA AMBIENTE RESTAURADO:
+echo.
+echo   1^) Instalar Python 3.11 (melhor estabilidade p/ PyTorch/Whisper)
+echo      Download: https://www.python.org/downloads/windows/
+echo      - Nao esqueca de marcar "Add python to PATH".
+echo.
+echo   2^) Baixar e configurar o FFmpeg (build full shared):
+echo      Download: https://github.com/GyanD/codexffmpeg/releases
+echo      Extraia para que os binarios fiquem em:
 echo      %FFMPEG_SHARED_BIN%
+echo.
+echo   3^) Recrear ambiente virtual local forcado:
+echo      Comando: executar.bat --setup-env --recreate-venv
+echo =======================================================
 echo.
 pause
 endlocal
