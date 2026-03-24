@@ -41,3 +41,5 @@ transcriber/whisper-cublas-12.4.0-bin-x64/
 # Optional temp
 *.tmp
 *.log
+data/media_faren.db-shm
+data/media_faren.db-wal
